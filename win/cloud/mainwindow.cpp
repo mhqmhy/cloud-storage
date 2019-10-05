@@ -11,14 +11,28 @@
 #include <QtMultimedia/QSound>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QTreeWidget>
 #include "TreeView.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+
     ui->setupUi(this);
+    this->setWindowIcon(QIcon(":/icon1.ico"));
+    this->setWindowTitle("摆渡云 渡人渡己");
+    QWidget * wid=new QWidget();
+    this->setCentralWidget(wid);
+
+    QHBoxLayout *hbLayout = new QHBoxLayout();
+    QTreeWidget *t=new QTreeWidget();
     TreeView *tree=new TreeView();
-    this->setCentralWidget(tree);
+    hbLayout->addWidget(tree);
+    hbLayout->addWidget(t);
+    wid->setLayout(hbLayout);
+
+
+
 //设置菜单栏
     QMenu *menu = ui->menubar->addMenu("文件");
     QAction *a1=new QAction(tr("上传"));
@@ -31,10 +45,10 @@ MainWindow::MainWindow(QWidget *parent)
     menu->addAction(a4);
     QAction *a5=new QAction(tr("删除"));
     menu->addAction(a5);
-    QMenu *menuSetting = ui->menubar->addMenu("帮助");
+    QMenu *menuSetting = ui->menubar->addMenu("设置");
     QAction *a6=new QAction(tr("更改根目录"));
     menuSetting->addAction(a6);
-    QAction *a7=new QAction(tr("产品介绍"));
+    QAction *a7=new QAction(tr("设置服务器地址"));
     menuSetting->addAction(a7);
     QMenu *menuIns = ui->menubar->addMenu("帮助");
     QAction *a8=new QAction(tr("了解我们"));
