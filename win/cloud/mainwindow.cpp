@@ -39,16 +39,22 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu *menuIns = ui->menubar->addMenu("帮助");
     QAction *a8=new QAction(tr("了解我们"));
     menuIns->addAction(a8);
+    connect(a8, SIGNAL(triggered()), this, SLOT(openGitHub()));
     QAction *a9=new QAction(tr("产品介绍"));
     menuIns->addAction(a9);
-    connect(a9, SIGNAL(triggered()), this, SLOT(openGitHub()));
+    connect(a8, SIGNAL(triggered()), this, SLOT(openIntroduce()));
 }
-void MainWindow :: openGitHub()
+void MainWindow :: openIntroduce()
 {
 
-    QString URL = "https://github.com/SheepHuan/cloud-storage";
+    QString URL = "https://github.com/SheepHuan/cloud-storage/blob/master/%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D.md";
     QDesktopServices::openUrl(QUrl(URL.toLatin1()));
 
+}
+void MainWindow:: openGitHub()
+{
+    QString URL = "https://github.com/SheepHuan/cloud-storage";
+    QDesktopServices::openUrl(QUrl(URL.toLatin1()));
 }
 MainWindow::~MainWindow()
 {

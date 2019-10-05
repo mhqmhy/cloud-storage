@@ -28,9 +28,8 @@ public slots:
     {
         qDebug()<<"downloading"<<endl;
     }
-public slots:
     void openGitHub();
-
+    void openIntroduce();
 };
 class PlaySound: public QThread
 {
