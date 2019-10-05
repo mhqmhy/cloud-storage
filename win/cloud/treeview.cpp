@@ -2,19 +2,23 @@
 #include <QModelIndex>
 #include <QDebug>
 #include <QMenu>
+#include <QMenuBar>
 #include <QString>
 TreeView::TreeView() :QTreeView()
 {
-//    createItemMenu();
-//    createConnection();
-   this->setContextMenuPolicy(Qt::CustomContextMenu);
-   connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
+
+    this->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
     model=new QFileSystemModel();
     model->setRootPath(QDir::currentPath());
     this->setModel(model);
     this->setRootIndex(model->index(QDir::currentPath()));
     this->setWindowTitle(tr("本地目录"));
     connect(this,SIGNAL(doubleClicked ( const QModelIndex)),this,SLOT(printCurrentItem()));
+
+    //upload
+
+
 }
 void TreeView::showWin()
 {
