@@ -4,6 +4,8 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QString>
+#include <QThread>
+
 TreeView::TreeView() :QTreeView()
 {
 
@@ -14,7 +16,7 @@ TreeView::TreeView() :QTreeView()
     this->setModel(model);
     this->setRootIndex(model->index(QDir::currentPath()));
     this->setWindowTitle(tr("本地目录"));
-    connect(this,SIGNAL(doubleClicked ( const QModelIndex)),this,SLOT(printCurrentItem()));
+    connect(this,SIGNAL(doubleClicked ( const QModelIndex)),this,SLOT(playCurrentItem()));
 
     //upload
 
@@ -24,7 +26,7 @@ void TreeView::showWin()
 {
     this->show();
 }
-void TreeView::printCurrentItem()
+void TreeView::playCurrentItem()
 {
     qDebug()<<tr("OK")<<endl;
     QModelIndex index=this->currentIndex();
@@ -46,14 +48,5 @@ void TreeView::slotCustomContextMenu(const QPoint &point)
         QAction *a4=new QAction(tr("删除"));
         menu->addAction(a4);
         menu->exec(this->mapToGlobal(point));
-
-//    QModelIndex index = this->currentIndex();
-//    QString fileName = this->model->data(this->model->index(index.row(), 0),0).toString();
-//    menu->addAction(QString("Import"), this, SLOT(slotTest()));
-//    menu->addAction(QString("Export"), this, SLOT(slotTest()));
-//    menu->exec(QCursor::pos());
-}
-void TreeView::test()
-{
 
 }

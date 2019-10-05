@@ -7,6 +7,10 @@
 #include <QTreeView>
 #include <QDir>
 #include <QFileSystemModel>
+#include <QMovie>
+#include <QtMultimedia/QSound>
+#include <QDesktopServices>
+#include <QUrl>
 #include "TreeView.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,10 +41,34 @@ MainWindow::MainWindow(QWidget *parent)
     menuIns->addAction(a8);
     QAction *a9=new QAction(tr("产品介绍"));
     menuIns->addAction(a9);
+    connect(a9, SIGNAL(triggered()), this, SLOT(openGitHub()));
 }
+void MainWindow :: openGitHub()
+{
 
+    QString URL = "https://github.com/SheepHuan/cloud-storage";
+    QDesktopServices::openUrl(QUrl(URL.toLatin1()));
+
+}
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+void PlayMovie :: getFile(QString file)
+{
+    this->file=file;
+}
+void PlayMovie :: run()
+{//播放视频
+
+}
+void PlaySound :: getFile(QString file)
+{
+    this->file=file;
+}
+void PlaySound :: run()
+{//播放音乐 WAV格式
+
+
+}

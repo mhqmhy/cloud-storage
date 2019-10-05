@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMainWindow>
 #include <QDialog>
+#include <QThread>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -27,6 +28,26 @@ public slots:
     {
         qDebug()<<"downloading"<<endl;
     }
+public slots:
+    void openGitHub();
 
+};
+class PlaySound: public QThread
+{
+protected:
+    void run();
+private:
+    QString file;
+public:
+    void getFile(QString file);
+};
+class PlayMovie:public QThread
+{
+protected:
+    void run();
+private:
+    QString file;
+public:
+    void getFile(QString file);
 };
 #endif // MAINWINDOW_H
