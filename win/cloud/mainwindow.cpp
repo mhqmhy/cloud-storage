@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(wid);
 
     QHBoxLayout *hbLayout = new QHBoxLayout();
-    QTreeWidget *t=new QTreeWidget();
+    ServerTree *t=new ServerTree();
     TreeView *tree=new TreeView();
     hbLayout->addWidget(tree);
     hbLayout->addWidget(t);

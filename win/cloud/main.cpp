@@ -39,10 +39,6 @@ void fileSystem()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-//    TreeView *t;
-//    t=new TreeView();
-
-//    t->showWin();
     MainWindow * w=new MainWindow();
     w->show();
 
