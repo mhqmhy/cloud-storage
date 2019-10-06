@@ -121,7 +121,7 @@ void IPDialog :: closeDialog()
 void IPDialog :: getIPAddr()
 {
    QString addr=this->ipLine->text();
-   qDebug()<<addr<<endl;
+   qDebug()<<tr("ip")<<addr<<endl;
 }
 void PlayMovie :: getFile(QString file)
 {
