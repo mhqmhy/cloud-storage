@@ -8,6 +8,8 @@ windows安装教程：https://blog.csdn.net/dengjin20104042056/article/details/8
 
 Linux安装教程:https://blog.csdn.net/weixin_38621214/article/details/92764479
 
+强烈建议使用Ubuntu16.04打开本项目
+
 ## 2.基本功能
 
 
