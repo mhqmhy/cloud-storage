@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QPushButton>
 #include <QLineEdit>
+#include "TreeView.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -19,9 +20,12 @@ public:
     ~MainWindow();
    QString username,passwd;
    void updateServerList();
+   ServerTree *serverTree;
+   TreeView *localTree;
 private:
     Ui::MainWindow *ui;
 public slots:
+    void updateLocalList();
     void downloadFile()
     {
         qDebug()<<"downloading"<<endl;

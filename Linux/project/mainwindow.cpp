@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDialog>
+#include <QFileDialog>
 #include <QAction>
 #include <QToolBar>
 #include <QHBoxLayout>
@@ -28,10 +29,10 @@ MainWindow::MainWindow(QWidget *parent)
     this->setCentralWidget(wid);
 
     QHBoxLayout *hbLayout = new QHBoxLayout();
-    ServerTree *t=new ServerTree();
-    TreeView *tree=new TreeView();
-    hbLayout->addWidget(tree);
-    hbLayout->addWidget(t);
+    serverTree=new ServerTree();
+    localTree=new TreeView();
+    hbLayout->addWidget(localTree);
+    hbLayout->addWidget(serverTree);
     wid->setLayout(hbLayout);
 
 
@@ -51,6 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
     QMenu *menuSetting = ui->menubar->addMenu("设置");
     QAction *a6=new QAction(tr("更改根目录"));
     menuSetting->addAction(a6);
+    connect(a6,SIGNAL(triggered()),this,SLOT(updateLocalList()));
     QAction *a7=new QAction(tr("设置服务器地址"));//更改服务器地址
     menuSetting->addAction(a7);
     connect(a7, SIGNAL(triggered()), this, SLOT(chgServerIp()));
@@ -92,7 +94,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::updateServerList()
 {
-    //
+
+}
+
+void MainWindow::updateLocalList()
+{
+    qDebug()<<"ok"<<endl;
+    QString srcDirPath = QFileDialog::getExistingDirectory(
+    this, "choose src Directory",  "/");
+    if (srcDirPath.isEmpty())
+    {
+        return;
+    }
+    else
+    {
+        qDebug() << "srcDirPath=" << srcDirPath;
+        this->localTree->model->setRootPath(srcDirPath);
+        this->localTree->setModel(this->localTree->model);
+        this->localTree->setRootIndex(this->localTree->model->index(srcDirPath));
+    }
 }
 
 

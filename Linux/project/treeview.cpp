@@ -18,7 +18,6 @@ TreeView::TreeView() :QTreeView()
     this->setRootIndex(model->index(QDir::currentPath()));
     this->setWindowTitle(tr("本地目录"));
     connect(this,SIGNAL(doubleClicked ( const QModelIndex)),this,SLOT(playCurrentItem()));
-    //upload
 
 
 }

@@ -12,7 +12,6 @@ class ErrorDialog:public QDialog
 public:
     ErrorDialog();
     void showError(QString error);
-
 };
 class Login:public QWidget
 {
