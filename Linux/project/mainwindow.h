@@ -16,6 +16,7 @@ public:
     ~MainWindow();
    QString username,passwd;
    void updateServerList();
+   ProgressDialog *pDialog;
    ServerTree *serverTree;
    TreeView *localTree;
 private:
@@ -30,6 +31,7 @@ public slots:
     void openIntroduce();//默认浏览器定位到产品介绍.md
     void chgServerIp();
     void chgLoaclRootDir();
+    void showProgressBar();
 
 };
 

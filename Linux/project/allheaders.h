@@ -52,8 +52,9 @@
 
 #include <QMenu>
 #include <QMenuBar>
+#include <QProgressBar>
 #include <QAction>
 #include <QToolBar>
-
+#include <QProgressDialog>
 
 #endif // ALLHEADERS_H

@@ -1,7 +1,8 @@
 #include "TreeView.h"
 
-TreeView::TreeView() :QTreeView()
+TreeView::TreeView(ProgressDialog *p) :QTreeView()
 {
+    progressDialog=p;
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     currentPath=QDir::currentPath();
     connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
@@ -69,9 +70,9 @@ void TreeView::uploadFile()
     selected = selected.sibling(selected.row(),0); //0 就是第一列元素，1就是第二列元素，依此类推
     QString file(this->model->itemData(selected).values()[0].toString()); //由你自己每一列的QVariant绑定的值，决定获取数据的方式
     qDebug()<<tr("uploading ")<<file<<endl;
-
-
-
+    if (progressDialog->isHidden())
+        progressDialog->show();
+    progressDialog->setProgressBar(file);
     loadModel(currentPath);
 }
 void TreeView::playCurrentItem()
@@ -81,12 +82,13 @@ void TreeView::playCurrentItem()
     qDebug()<<tr("index: ")<<index<<endl;
     QString filename=this->model->data(index).toString();
     qDebug()<<tr("filename: ")<<filename<<tr("filepath: ")<<endl;
-//    qDebug("%s",qUtf8Printable("你好"));
+
 }
 
 
-ServerTree::ServerTree() :QTreeWidget()
+ServerTree::ServerTree(ProgressDialog *p) :QTreeWidget()
 {
+    progressDialog=p;
     this->setColumnCount(2);  //设置列
     this->setHeaderLabels({tr("Name"),tr("type")});    //设置表头
     QList<QTreeWidgetItem *> items;
@@ -127,6 +129,7 @@ void ServerTree::deleteFile()
     QString file=t->text(0);
     qDebug()<<tr("file")<<file<<endl;
     DeleteFileDialog* deleteDialog =new DeleteFileDialog(file);
+
     deleteDialog->show();
 }
 
@@ -135,6 +138,9 @@ void ServerTree::downloadFile()//downlaod file
     QTreeWidgetItem* t=this->currentItem();
     QString file=t->text(0);
     qDebug()<<tr("downloading ")<<file<<endl;
+    if (progressDialog->isHidden())
+        progressDialog->show();
+    progressDialog->setProgressBar(file);
 }
 
 void ServerTree::renameFile()

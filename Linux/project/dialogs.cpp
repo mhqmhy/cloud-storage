@@ -71,3 +71,37 @@ void DeleteFileDialog::deleteFile()
     qDebug()<<"deleting "<<filename<<"..."<<endl;
     this->close();
 }
+
+ProgressDialog::ProgressDialog()
+{
+    vbox=new QVBoxLayout();
+    this->setLayout(vbox);
+}
+
+void ProgressDialog::setProgressBar(QString file)
+{
+    QHBoxLayout *hbox=new QHBoxLayout();
+    QLabel *filename=new QLabel();
+    filename->setText(file);
+    QLabel *status=new QLabel();
+    status->setText("Waitting");
+    QProgressBar *pBar=new QProgressBar();
+    pBar->setOrientation(Qt::Horizontal);  //水平方向
+    pBar->setRange(0,100);
+    QWidget *w=new QWidget();
+    hbox->addWidget(filename);
+    hbox->addWidget(pBar);
+    hbox->addWidget(status);
+    w->setLayout(hbox);
+    vbox->addWidget(w);
+    showBar(pBar);
+    status->setText("Finished");
+}
+
+void ProgressDialog::showBar(QProgressBar *pBar)
+{
+    for (int i=0;i<=100;i++)
+    {
+        pBar->setValue(i);
+    }
+}

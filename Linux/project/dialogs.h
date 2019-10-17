@@ -33,6 +33,16 @@ public slots:
     void deleteFile();
 };
 
+class ProgressDialog:public QDialog
+{
+    Q_OBJECT
+public:
+    QProgressBar *currentBar;
+    ProgressDialog();
+    QVBoxLayout *vbox;
+    void setProgressBar(QString );
+    void showBar(QProgressBar *);
+};
 
 
 #endif // DIALOGS_H
