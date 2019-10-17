@@ -1,5 +1,5 @@
 #include"bdCloud_Lib.h"
-#include "bdCloud_Lib.c"
+
 int main()
 {
     int sockfd;
@@ -55,20 +55,26 @@ int main()
 			switch (recv_header(sock_fd,buf,&auth))
 			{
 				case 0:{
+					recv_dir(sock_fd,buf,auth);
 					break;
 				}
 				case 1:{
+					recv_upload(sock_fd,buf,auth);
 					break;
 				}
 				case 2:{
-
+					recv_download(sock_fd,buf,auth);
 					break;
 				}
 				case 3:{
-
+					recv_del(sock_fd,buf,auth);
 					break;
 				}
 				case 4:{
+					recv_update(sock_fd,buf,auth);
+					break;
+				}
+				case -1:{
 					break;
 				}
 				default:{
@@ -76,7 +82,6 @@ int main()
 					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
 					{
 						perror("Error: fail to send!\n");
-						exit(1);
 					}
 					break;
 				}
