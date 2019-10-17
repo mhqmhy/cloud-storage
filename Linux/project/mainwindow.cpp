@@ -1,22 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDialog>
-#include <QFileDialog>
-#include <QAction>
-#include <QToolBar>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QTreeView>
-#include <QDir>
-#include <QFileSystemModel>
-#include <QMovie>
-#include <QtMultimedia/QSound>
-#include <QDesktopServices>
-#include <QUrl>
-#include <QPushButton>
-#include <QTreeWidget>
-#include <QLineEdit>
-#include <QDebug>
 #include "TreeView.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -119,37 +102,6 @@ void MainWindow::updateLocalList()
 
 
 
-IPDialog :: IPDialog():QDialog()
-{
-    this->setWindowIcon(QIcon(":/icon1.ico"));
-    this->setGeometry(900,500,300,120);
-    this->setMinimumSize(220,140);
-    QHBoxLayout * hbox=new QHBoxLayout();
-    QVBoxLayout * vbox=new QVBoxLayout();
-    sureBtn=new QPushButton(tr("确定"),this);
-    sureBtn->setMinimumSize(100,40);
-    cancelBtn=new QPushButton(tr("关闭"),this);
-    cancelBtn->setMinimumSize(100,40);
-    hbox->addWidget(sureBtn);
-    hbox->addWidget(cancelBtn);
-    ipLine=new QLineEdit(this);
-    ipLine->setMinimumSize(210,60);
-    ipLine->setFont(QFont("Consolas" , 14 ,  QFont::Bold));
-    vbox->addWidget(ipLine);
-    vbox->addLayout(hbox);
-    this->setLayout(vbox);
-    connect(sureBtn,SIGNAL(clicked()),this,SLOT(getIPAddr()));
-    connect(cancelBtn,SIGNAL(clicked()),this,SLOT(closeDialog()));
-}
-void IPDialog :: closeDialog()
-{
-    this->close();
-}
-void IPDialog :: getIPAddr()
-{
-   QString addr=this->ipLine->text();
-   qDebug()<<tr("ip")<<addr<<endl;
-}
 
 
 

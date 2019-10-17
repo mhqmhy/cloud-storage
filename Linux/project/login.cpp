@@ -1,21 +1,16 @@
 #include "login.h"
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QString>
-#include <QDebug>
-#include <QDialog>
+
 Login::Login():QWidget ()
 {
+    errorWin=new ErrorDialog();
     this->initUI();
     this->setWindowIcon(QIcon(":/icon1.ico"));
     this->setWindowTitle("Login");
     connect(sureBtn,SIGNAL(clicked()),this,SLOT(checkAccount()));
 }
-
 void Login::initUI()
 {
-    errorWin=new ErrorDialog();
+
     QLabel *labelUsername=new QLabel(tr("UserName"));
     QLabel *labelPasswd=new QLabel(tr("Password"));
     username = new QLineEdit("User");
@@ -69,17 +64,4 @@ void Login::showMainWindow()
     win->passwd=this->passwd->text();
 }
 
-ErrorDialog::ErrorDialog()
-{
-    this->resize(300,100);
-}
 
-
-void ErrorDialog::showError(QString error)
-{
-    QLabel *errorLabel=new QLabel(error);
-    QVBoxLayout *vboxv=new QVBoxLayout();
-    vboxv->addWidget(errorLabel);
-    this->setLayout(vboxv);
-    this->show();
-}

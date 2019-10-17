@@ -28,12 +28,15 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     treeview.cpp \
-    login.cpp
+    login.cpp \
+    dialogs.cpp
 
 HEADERS += \
         mainwindow.h \
     TreeView.h \
-    login.h
+    login.h \
+    dialogs.h \
+    allheaders.h
 
 FORMS += \
         mainwindow.ui

@@ -1,11 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-#include <QDebug>
-#include <QMainWindow>
-#include <QDialog>
-#include <QThread>
-#include <QPushButton>
-#include <QLineEdit>
+
+#include <dialogs.h>
 #include "TreeView.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -36,17 +32,6 @@ public slots:
     void chgLoaclRootDir();
 
 };
-class IPDialog: public QDialog
-{
-    Q_OBJECT
-public:
-    QPushButton * sureBtn;
-    QPushButton * cancelBtn;
-    QLineEdit *ipLine;
-    IPDialog();
-public slots:
-    void closeDialog();
-    void getIPAddr();
-};
+
 
 #endif // MAINWINDOW_H

@@ -1,18 +1,10 @@
 #ifndef LOGIN_H
 #define LOGIN_H
-#include <QLineEdit>
-#include <QPushButton>
-#include <QWidget>
-#include <QDialog>
+
 #include "mainwindow.h"
+#include "dialogs.h"
 //
-class ErrorDialog:public QDialog
-{
-    Q_OBJECT
-public:
-    ErrorDialog();
-    void showError(QString error);
-};
+
 class Login:public QWidget
 {
     Q_OBJECT

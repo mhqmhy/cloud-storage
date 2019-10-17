@@ -1,16 +1,20 @@
 #ifndef TREEVIEW_H
 #define TREEVIEW_H
-#include <QTreeView>
-#include <QTreeWidget>
-#include <QFileSystemModel>
+
+#include "dialogs.h"
 class TreeView : public QTreeView//记得加public 不然是私有继承
 {
     Q_OBJECT
     public:
         TreeView();
-        void showWin();
+        QString currentPath;
+//        void showWin();
         QFileSystemModel *model;
+        void loadModel(QString);
     public slots:
+        void deleteFile();
+        void renameFile();
+        void uploadFile();
         void playCurrentItem();
         void slotCustomContextMenu(const QPoint &point);
 };

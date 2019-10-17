@@ -1,29 +1,78 @@
 #include "TreeView.h"
-#include <QModelIndex>
-#include <QDebug>
-#include <QMenu>
-#include <QMenuBar>
-#include <QString>
-#include <QThread>
-#include <QString>
-#include <QTreeWidget>
-#include <QTreeWidgetItem>
+
 TreeView::TreeView() :QTreeView()
 {
     this->setContextMenuPolicy(Qt::CustomContextMenu);
+    currentPath=QDir::currentPath();
     connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
     model=new QFileSystemModel();
-    model->setRootPath(QDir::currentPath());
-    this->setModel(model);
-    this->setRootIndex(model->index(QDir::currentPath()));
+    loadModel(QDir::currentPath());
     this->setWindowTitle(tr("本地目录"));
     connect(this,SIGNAL(doubleClicked ( const QModelIndex)),this,SLOT(playCurrentItem()));
 
 
 }
-void TreeView::showWin()
+
+void TreeView::loadModel(QString path)
 {
-    this->show();
+    currentPath=path;
+    this->model->setRootPath(path);
+    this->setModel(this->model);
+    this->setRootIndex(this->model->index(path));
+}
+void TreeView::slotCustomContextMenu(const QPoint &point)
+{
+        QMenu *menu = new QMenu(this);
+        QAction *a1=new QAction(tr("Upload"));
+        connect(a1,SIGNAL(triggered()),this,SLOT(uploadFile()));
+        menu->addAction(a1);
+        QAction *a3=new QAction(tr("Rename"));
+        menu->addAction(a3);
+        connect(a3,SIGNAL(triggered()),this,SLOT(renameFile()));
+        QAction *a4=new QAction(tr("Delete"));
+        menu->addAction(a4);
+        connect(a4,SIGNAL(triggered()),this,SLOT(deleteFile()));
+        menu->exec(this->mapToGlobal(point));
+
+}
+
+void TreeView::deleteFile()
+{
+
+    QModelIndex selected = this->currentIndex(); //选中的行
+    selected = selected.sibling(selected.row(),0); //0 就是第一列元素，1就是第二列元素，依此类推
+    QString file(this->model->itemData(selected).values()[0].toString()); //由你自己每一列的QVariant绑定的值，决定获取数据的方式
+    qDebug()<<tr("file")<<file<<endl;
+    DeleteFileDialog* deleteDialog =new DeleteFileDialog(file);
+    deleteDialog->show();
+
+
+
+    loadModel(currentPath);
+}
+
+void TreeView::renameFile()
+{
+    QModelIndex selected = this->currentIndex(); //选中的行
+    selected = selected.sibling(selected.row(),0); //0 就是第一列元素，1就是第二列元素，依此类推
+    QString file(this->model->itemData(selected).values()[0].toString()); //由你自己每一列的QVariant绑定的值，决定获取数据的方式
+    qDebug()<<tr("rename ")<<file<<endl;
+
+
+
+    loadModel(currentPath);
+}
+
+void TreeView::uploadFile()
+{
+    QModelIndex selected = this->currentIndex(); //选中的行
+    selected = selected.sibling(selected.row(),0); //0 就是第一列元素，1就是第二列元素，依此类推
+    QString file(this->model->itemData(selected).values()[0].toString()); //由你自己每一列的QVariant绑定的值，决定获取数据的方式
+    qDebug()<<tr("uploading ")<<file<<endl;
+
+
+
+    loadModel(currentPath);
 }
 void TreeView::playCurrentItem()
 {
@@ -34,20 +83,7 @@ void TreeView::playCurrentItem()
     qDebug()<<tr("filename: ")<<filename<<tr("filepath: ")<<endl;
 //    qDebug("%s",qUtf8Printable("你好"));
 }
-void TreeView::slotCustomContextMenu(const QPoint &point)
-{
-        QMenu *menu = new QMenu(this);
-        QAction *a1=new QAction(tr("上传"));
-        menu->addAction(a1);
-        QAction *a2=new QAction(tr("移动"));
-        menu->addAction(a2);
-        QAction *a3=new QAction(tr("复制"));
-        menu->addAction(a3);
-        QAction *a4=new QAction(tr("删除"));
-        menu->addAction(a4);
-        menu->exec(this->mapToGlobal(point));
 
-}
 
 ServerTree::ServerTree() :QTreeWidget()
 {
@@ -69,9 +105,9 @@ ServerTree::ServerTree() :QTreeWidget()
 }
 void ServerTree::popMenu(const QPoint &point)
 {
-    QAction *downloadItem=new QAction(tr("下载"));
-    QAction *reNameItem=new QAction(tr("重命名"));
-    QAction *deleteItem=new QAction(tr("删除"));
+    QAction *downloadItem=new QAction(tr("Download"));
+    QAction *reNameItem=new QAction(tr("Rename"));
+    QAction *deleteItem=new QAction(tr("Delete"));
     connect(deleteItem, SIGNAL(triggered()), this, SLOT(deleteFile()));
     connect(reNameItem,SIGNAL(triggered()),this,SLOT(renameFile()));
     connect(downloadItem,SIGNAL(triggered()),this,SLOT(downloadFile()));
@@ -81,21 +117,31 @@ void ServerTree::popMenu(const QPoint &point)
     menu.addAction(deleteItem);
     menu.exec(this->mapToGlobal(point));
 
+
+
 }
 
 void ServerTree::deleteFile()
 {
-
+    QTreeWidgetItem* t=this->currentItem();
+    QString file=t->text(0);
+    qDebug()<<tr("file")<<file<<endl;
+    DeleteFileDialog* deleteDialog =new DeleteFileDialog(file);
+    deleteDialog->show();
 }
 
 void ServerTree::downloadFile()//downlaod file
 {
-
+    QTreeWidgetItem* t=this->currentItem();
+    QString file=t->text(0);
+    qDebug()<<tr("downloading ")<<file<<endl;
 }
 
 void ServerTree::renameFile()
 {
-
+    QTreeWidgetItem* t=this->currentItem();
+    QString file=t->text(0);
+    qDebug()<<tr("rename ")<<file<<endl;
 }
 void ServerTree::addOneItem()
 {
