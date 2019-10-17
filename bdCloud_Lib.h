@@ -36,7 +36,7 @@ int recv_download(const int sock_fd,char *buf,const int auth);
 
 int recv_del(const int sock_fd,char *buf,const int auth);
 
-int recv_update(const int sock_fd,char *buf,const int auth);
+int recv_modify(const int sock_fd,char *buf,const int auth);
 
 unsigned long get_file_size(const char *path);
 

@@ -35,7 +35,7 @@ int main()
         perror("Error: fail to listen!\n");
 		exit(1);
     }
-    printf("bdCloud_Server is running.\n");
+    printf("bdCloud_Server is running...\n");
     while(1)
     {
         //建立连接
@@ -51,33 +51,92 @@ int main()
 		if(fork() == 0)
 		{
 			int auth=-1;
-			bzero(buf,sizeof(buf));
+			bzero(buf,MAX_BUF_SIZE);
 			switch (recv_header(sock_fd,buf,&auth))
 			{
 				case 0:{
+					bzero(buf,MAX_BUF_SIZE);
+					buf[0]='1';
+					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+					{
+						perror("Error: fail to send!\n");
+						break;
+					}
 					recv_dir(sock_fd,buf,auth);
 					break;
 				}
 				case 1:{
-					recv_upload(sock_fd,buf,auth);
+					bzero(buf,MAX_BUF_SIZE);
+					buf[0]='1';
+					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+					{
+						perror("Error: fail to send!\n");
+						break;
+					}
+					if(recv_upload(sock_fd,buf,auth)==1)
+					{
+						bzero(buf,MAX_BUF_SIZE);
+						buf[0]='0';
+						if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+						{
+							perror("Error: fail to send!\n");
+						}
+					}
 					break;
 				}
 				case 2:{
+					bzero(buf,MAX_BUF_SIZE);
+					buf[0]='1';
+					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+					{
+						perror("Error: fail to send!\n");
+						break;
+					}
 					recv_download(sock_fd,buf,auth);
 					break;
 				}
 				case 3:{
-					recv_del(sock_fd,buf,auth);
+					bzero(buf,MAX_BUF_SIZE);
+					buf[0]='1';
+					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+					{
+						perror("Error: fail to send!\n");
+						break;
+					}
+					int judge=recv_del(sock_fd,buf,auth);
+					if(judge!=-1)
+					{
+						bzero(buf,MAX_BUF_SIZE);
+						buf[0]=(judge==0)?'1':'0';
+						if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+						{
+							perror("Error: fail to send!\n");
+						}
+					}
 					break;
 				}
 				case 4:{
-					recv_update(sock_fd,buf,auth);
-					break;
-				}
-				case -1:{
+					bzero(buf,MAX_BUF_SIZE);
+					buf[0]='1';
+					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+					{
+						perror("Error: fail to send!\n");
+						break;
+					}
+					int judge=recv_modify(sock_fd,buf,auth);
+					if(judge!=-1)
+					{
+						bzero(buf,MAX_BUF_SIZE);
+						buf[0]=(judge==0)?'1':'0';
+						if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
+						{
+							perror("Error: fail to send!\n");
+						}
+					}
 					break;
 				}
 				default:{
+					bzero(buf,MAX_BUF_SIZE);
 					buf[0]='0';
 					if(send(sock_fd,buf,MAX_BUF_SIZE,0)<0)
 					{
@@ -86,19 +145,7 @@ int main()
 					break;
 				}
 			}
-
-			/*
-			if((recvbytes = recv(sock_fd, buf, 1024, 0)) < 0)
-			{
-		        fprintf(stderr, "recv error:%s\n", strerror(errno));
-			    exit(1);
-			}
-            buf[recvbytes] = '\0';
-            printf("buf is %s\n", buf);
-			close(sockfd);
-			close(sock_fd);
-		    exit(0);
-		    */
+			printf("Finish the task from %s !\n",inet_ntoa(client_addr.sin_addr));
 		    close(sockfd);
 			close(sock_fd);
 		    exit(0);
@@ -109,7 +156,6 @@ int main()
 	        close(sock_fd);
 	    }
 	}
-
 		//关闭
 	close(sockfd);
     return 0;
