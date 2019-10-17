@@ -10,7 +10,6 @@
 #include <QTreeWidgetItem>
 TreeView::TreeView() :QTreeView()
 {
-
     this->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
     model=new QFileSystemModel();
@@ -90,7 +89,7 @@ void ServerTree::deleteFile()
 
 }
 
-void ServerTree::downloadFile()
+void ServerTree::downloadFile()//downlaod file
 {
 
 }

@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    treeview.cpp
+    treeview.cpp \
+    login.cpp
 
 HEADERS += \
         mainwindow.h \
-    TreeView.h
+    TreeView.h \
+    login.h
 
 FORMS += \
         mainwindow.ui

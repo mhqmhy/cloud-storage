@@ -21,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-
     ui->setupUi(this);
     this->setWindowIcon(QIcon(":/icon1.ico"));
     this->setWindowTitle("摆渡云 众里寻他千百度");
@@ -91,6 +90,15 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::updateServerList()
+{
+    //
+}
+
+
+
+
+
 IPDialog :: IPDialog():QDialog()
 {
     this->setWindowIcon(QIcon(":/icon1.ico"));
@@ -122,20 +130,7 @@ void IPDialog :: getIPAddr()
    QString addr=this->ipLine->text();
    qDebug()<<tr("ip")<<addr<<endl;
 }
-void PlayMovie :: getFile(QString file)
-{
-    this->file=file;
-}
-void PlayMovie :: run()
-{//播放视频
-
-}
-void PlaySound :: getFile(QString file)
-{
-    this->file=file;
-}
-void PlaySound :: run()
-{//播放音乐 WAV格式
 
 
-}
+
+

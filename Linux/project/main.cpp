@@ -17,7 +17,7 @@
 #include <QModelIndex>
 #include "mainwindow.h"
 #include "TreeView.h"
-
+#include "login.h"
 void fileSystem()
 {
     QFileSystemModel model;
@@ -32,9 +32,10 @@ void fileSystem()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow * w=new MainWindow();
-    w->show();
-
+//    MainWindow * w=new MainWindow();
+//    w->show();
+     Login *login=new Login();
+     login->show();
 
 
   return a.exec();

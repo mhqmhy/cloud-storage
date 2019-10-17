@@ -17,7 +17,8 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
+   QString username,passwd;
+   void updateServerList();
 private:
     Ui::MainWindow *ui;
 public slots:
@@ -43,22 +44,5 @@ public slots:
     void closeDialog();
     void getIPAddr();
 };
-class PlaySound: public QThread
-{
-protected:
-    void run();
-private:
-    QString file;
-public:
-    void getFile(QString file);
-};
-class PlayMovie:public QThread
-{
-protected:
-    void run();
-private:
-    QString file;
-public:
-    void getFile(QString file);
-};
+
 #endif // MAINWINDOW_H
