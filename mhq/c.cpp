@@ -59,7 +59,7 @@ struct sockaddr_in taojiekou()
 int ProcessList(vector<string> &myList,string userName, string loginPassword)
 {
     struct sockaddr_in server_addr = taojiekou();
-    int sockfd,nbyte,fd;
+    int sockfd,nbyte;
     char buf[N],*buff;
     //ip
     if((sockfd = socket(AF_INET,SOCK_STREAM, 0)) < 0){
@@ -102,30 +102,37 @@ int ProcessList(vector<string> &myList,string userName, string loginPassword)
         //cout<<buf<<endl;
     }
     int fileCount = *(int*)buf;
-    cout<<fileCount<<endl;
+    cout<<"fileCount: "<<fileCount<<endl;
+    bzero(buf,N);
+    buf[0] = '1';
+    if( send(sockfd, buf, N ,0) < 0 )
+    {
+        perror("Error1: fail to send!\n");
+		return -1;
+    }
     while(fileCount--){
-        bzero(buf,N);
-        strcpy(buf,"1");
-        if( send(sockfd, buf, N ,0) < 0 )
-        {
-            perror("Error1: fail to send!\n");
-			return -1;
-        }
         bzero(buf,N);
         if( recv(sockfd,buf,N,0) < 0)
         {
             perror("Error1: fail to recv!\n");
 			return -1;
         }
-       
+        //cout<<"buf "<<buf<<endl;
         myList.push_back(buf);
+        bzero(buf,N);
+        buf[0] = '1';
+        if( send(sockfd,buf,N,0) < 0)
+        {
+            perror("Error1: fail to send!\n");
+			return -1;
+        }
     }
     
     for (int i = 0; i < myList.size(); i++)
     {
         cout<<myList[i]<<endl;
     }
-    close(fd);
+   
     close(sockfd);
     
     return 0; //successful
@@ -242,10 +249,21 @@ int ProcessPut( char pathname[],string userName,string loginPassword)//上传文
         if(buf[0] != '1')break;
         
     }
-    printf("Put file successfully!\n");
-    fclose(fp);
-    close(sockfd);
-    return 1;
+    if(buf[0] != 1)
+    {
+        perror("Error: fail to upload!\n");
+		fclose(fp);
+        close(sockfd);
+        return -1;
+    }
+    else
+    {
+        printf("Put file successfully!\n");
+        fclose(fp);
+        close(sockfd);
+        return 0;
+    }
+ 
 }
 
 /*----------------------------下载文件------------------------------------------*/
@@ -330,7 +348,7 @@ int ProcessGet(char pathname[],string userName,string loginPassword)//2下载文
 			{
 				perror("Error: fail to write!\n");
 				fclose(fp);
-				return 1;
+				return -1;
 			}
 			bzero(buf,MAX_BUF_SIZE);
 			buf[0]='1';
@@ -352,11 +370,11 @@ int ProcessGet(char pathname[],string userName,string loginPassword)//2下载文
 
 
 /*----------------------------删除文件------------------------------------------*/
-int ProcessDelete(string command,string userName, string loginPassword)
+int ProcessDelete(char filename[],string userName, string loginPassword)
 {
     struct sockaddr_in server_addr = taojiekou();
     int sockfd,nbyte,fd;
-    char *buf;
+    char buf[N],*buff;
    
     if((sockfd = socket(AF_INET,SOCK_STREAM, 0)) < 0){
         printf("fail\n");
@@ -368,23 +386,62 @@ int ProcessDelete(string command,string userName, string loginPassword)
         return -1;
     }
     
-    string baowen = "3"+userName+loginPassword+command;//3用户名登录密码文件名
+    string baowen = "3"+userName+loginPassword;//3用户名登录密码
 /*向服务端发送Get命令来获取文件，服务端返回文件是否存在*/
-    buf = (char *)baowen.c_str();
-    send(sockfd, buf, N, 0);
+    buff = (char *)baowen.c_str();
+    strcpy(buf,buff);
 
-    printf("Delete file successfully!\n");
-    close(fd);
-    close(sockfd);
-    return 0;
+    if(send(sockfd, buf, N, 0) < 0)
+    {
+        perror("Error: fail to send!\n");
+		return -1;
+    }
+    bzero(buf,N);
+    if(recv(sockfd,buf,N,0) < 0)
+    {
+        perror("Error: fail to recv!\n");
+		return -1;
+    }
+    if(buf[0] == '1')
+    {
+        //报文第一次发送文件名
+        bzero(buf,N);
+        strcpy(buf,filename);
+        cout<<"fliename to send:"<<buf<<endl;
+        if(send(sockfd,buf,N,0) < 0)
+        {
+            perror("Error: fail to send!\n");
+			return -1;
+        }
+    }
+    bzero(buf,N);
+    //接受确认
+    if(recv(sockfd,buf,N,0) < 0)
+    {
+        perror("Error: fail to send!\n");
+		return -1;
+    }
+    if(buf[0] == '1')
+    {
+        printf("Delete file successfully!\n");
+        close(sockfd);
+        return 0;
+    }
+    if(buf[0] != '1')
+    {
+        perror("Error: fail to remove file!\n");
+        close(sockfd);
+        return -1;
+    }
+
 }
 
 /*----------------------------重命名文件------------------------------------------*/
-int ProcessRename(string command,string userName,string loginPassword)
+int ProcessRename(char filename[],char newfilename[],string userName,string loginPassword)
 {
     struct sockaddr_in server_addr = taojiekou();
     int sockfd,nbyte,fd;
-    char *buf;
+    char buf[N],*buff;
     //ip
     if((sockfd = socket(AF_INET,SOCK_STREAM, 0)) < 0){
         printf("fail\n");
@@ -395,16 +452,73 @@ int ProcessRename(string command,string userName,string loginPassword)
         printf("fail to connect server\n");
         return -1;
     }
-    string baowen = "4"+userName+loginPassword+command;//4用户名登录密码文件名
+    string baowen = "4"+userName+loginPassword;//4用户名登录密码
 /*向服务端发送Get命令来获取文件，服务端返回文件是否存在*/
-    buf = (char *)baowen.c_str();
-    
-    send(sockfd, buf, N, 0);
+    buff = (char *)baowen.c_str();
+    strcpy(buf,buff);
 
-    printf("Rename file successfully!\n");
-    close(fd);
-    close(sockfd);
-    return 1;
+    if(send(sockfd, buf, N, 0) < 0)
+    {
+        perror("Error: fail to send!\n");
+		return -1;
+    }
+    bzero(buf,N);
+    if(recv(sockfd,buf,N,0) < 0)
+    {
+        perror("Error: fail to recv!\n");
+		return -1;
+    }
+    if(buf[0] == '1')
+    {
+        //报文第一次发送文件名
+        bzero(buf,N);
+        strcpy(buf,filename);
+        cout<<"fliename to send:"<<buf<<endl;
+        if(send(sockfd,buf,N,0) < 0)
+        {
+            perror("Error: fail to send!\n");
+			return -1;
+        }
+    }
+    bzero(buf,N);
+    //接受确认
+    if(recv(sockfd,buf,N,0) < 0)
+    {
+        perror("Error: fail to send!\n");
+		return -1;
+    }
+    if(buf[0] == '1')
+    {
+        //报文第二次发送要修改的文件名
+        bzero(buf,N);
+        strcpy(buf,newfilename);
+        cout<<"fliename to modify:"<<buf<<endl;
+        if(send(sockfd,buf,N,0) < 0)
+        {
+            perror("Error: fail to send!\n");
+			return -1;
+        }
+
+    }
+    bzero(buf,N);
+    if(recv(sockfd,buf,N,0) < 0)
+    {
+        perror("Error: fail to send!\n");
+		return -1;
+    }
+    if(buf[0] == '1')
+    {
+        printf("Rename file successfully!\n");
+        close(sockfd);
+        return 0;
+    }
+    if(buf[0] != '1')
+    {
+        perror("Error: fail to remove file!\n");
+        close(sockfd);
+        return -1;
+    }
+    return 0;
 }
 
 /*----------------------------打印帮助------------------------------------------*/
