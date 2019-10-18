@@ -56,5 +56,6 @@
 #include <QAction>
 #include <QToolBar>
 #include <QProgressDialog>
-
+#include "client.h"
+#include <ostream>
 #endif // ALLHEADERS_H

@@ -8,7 +8,6 @@ class TreeView : public QTreeView//记得加public 不然是私有继承
     public:
         TreeView(ProgressDialog *);
         QString currentPath;
-//        void showWin();
         QFileSystemModel *model;
         ProgressDialog *progressDialog;
         void loadModel(QString);
@@ -23,10 +22,13 @@ class ServerTree: public QTreeWidget
 {
     Q_OBJECT
     public:
-        ServerTree(ProgressDialog *);
+        QString currentPath;
         ProgressDialog *progressDialog;
+
+        ServerTree(ProgressDialog *);
+
     public slots:
-        void addOneItem();
+        void addItems();
         void popMenu(const QPoint& point);
         void deleteFile();
         void downloadFile();

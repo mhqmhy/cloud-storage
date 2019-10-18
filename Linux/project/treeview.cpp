@@ -1,5 +1,4 @@
 #include "TreeView.h"
-
 TreeView::TreeView(ProgressDialog *p) :QTreeView()
 {
     progressDialog=p;
@@ -7,7 +6,7 @@ TreeView::TreeView(ProgressDialog *p) :QTreeView()
     currentPath=QDir::currentPath();
     connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
     model=new QFileSystemModel();
-    loadModel(QDir::currentPath());
+    loadModel(tr("/home"));
     this->setWindowTitle(tr("本地目录"));
     connect(this,SIGNAL(doubleClicked ( const QModelIndex)),this,SLOT(playCurrentItem()));
 
@@ -16,7 +15,7 @@ TreeView::TreeView(ProgressDialog *p) :QTreeView()
 
 void TreeView::loadModel(QString path)
 {
-    currentPath=path;
+//    currentPath=path;
     this->model->setRootPath(path);
     this->setModel(this->model);
     this->setRootIndex(this->model->index(path));
@@ -41,14 +40,12 @@ void TreeView::deleteFile()
 {
 
     QModelIndex selected = this->currentIndex(); //选中的行
+    qDebug()<<tr("filepath")<<this->model->filePath(selected);
     selected = selected.sibling(selected.row(),0); //0 就是第一列元素，1就是第二列元素，依此类推
     QString file(this->model->itemData(selected).values()[0].toString()); //由你自己每一列的QVariant绑定的值，决定获取数据的方式
     qDebug()<<tr("file")<<file<<endl;
     DeleteFileDialog* deleteDialog =new DeleteFileDialog(file);
     deleteDialog->show();
-
-
-
     loadModel(currentPath);
 }
 
@@ -66,10 +63,12 @@ void TreeView::renameFile()
 
 void TreeView::uploadFile()
 {
+
     QModelIndex selected = this->currentIndex(); //选中的行
     selected = selected.sibling(selected.row(),0); //0 就是第一列元素，1就是第二列元素，依此类推
     QString file(this->model->itemData(selected).values()[0].toString()); //由你自己每一列的QVariant绑定的值，决定获取数据的方式
     qDebug()<<tr("uploading ")<<file<<endl;
+    file=currentPath+file;
     if (progressDialog->isHidden())
         progressDialog->show();
     progressDialog->setProgressBar(file);
@@ -149,7 +148,7 @@ void ServerTree::renameFile()
     QString file=t->text(0);
     qDebug()<<tr("rename ")<<file<<endl;
 }
-void ServerTree::addOneItem()
+void ServerTree::addItems()
 {
 
 

@@ -31,6 +31,7 @@ public:
     QPushButton * cancelBtn;
 public slots:
     void deleteFile();
+    void closeDialog();
 };
 
 class ProgressDialog:public QDialog
@@ -41,7 +42,7 @@ public:
     ProgressDialog();
     QVBoxLayout *vbox;
     void setProgressBar(QString );
-    void showBar(QProgressBar *);
+    void showBar(QProgressBar *,QLabel *);
 };
 
 

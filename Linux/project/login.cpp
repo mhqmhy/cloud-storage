@@ -1,5 +1,5 @@
 #include "login.h"
-
+#include <vector>
 Login::Login():QWidget ()
 {
     errorWin=new ErrorDialog();
@@ -10,13 +10,27 @@ Login::Login():QWidget ()
 }
 void Login::initUI()
 {
-
+    this->setMinimumSize(400,200);
+//    this->setMaximumSize(400,200);
     QLabel *labelUsername=new QLabel(tr("UserName"));
     QLabel *labelPasswd=new QLabel(tr("Password"));
+    labelUsername->setAlignment(Qt::AlignCenter);
+    labelPasswd->setAlignment(Qt::AlignCenter);
+    labelUsername->setMinimumSize(120,40);
+    labelPasswd->setMinimumSize(120,40);
+//    labelUsername->setMaximumSize(120,40);
+//    labelPasswd->setMaximumSize(120,40);
     username = new QLineEdit("User");
     passwd = new QLineEdit();
+    passwd->setEchoMode(QLineEdit::Password);
+    username->setMinimumSize(200,40);
+    passwd->setMinimumSize(200,40);
     cancelBtn=new QPushButton(tr("Cancel"));
     sureBtn=new QPushButton(tr("Sure"));
+//    sureBtn->setMaximumSize(160,30);
+    sureBtn->setMinimumSize(160,30);
+//    cancelBtn->setMaximumSize(160,30);
+    cancelBtn->setMinimumSize(160,30);
     QHBoxLayout *hbox1=new QHBoxLayout();
     QHBoxLayout *hbox2=new QHBoxLayout();
     QHBoxLayout *hbox3=new QHBoxLayout();
@@ -43,6 +57,7 @@ void Login::initUI()
 void Login::checkAccount()
 {
     QString accountUsername=username->text();
+    accountUsername="A";
     QString accountPassWd=passwd->text();
     qDebug()<<accountUsername<<accountPassWd;
     if (accountPassWd.length()!=6){
@@ -50,8 +65,21 @@ void Login::checkAccount()
         errorWin->showError(errorText);
     }
     else {
-        showMainWindow();
-        this->close();
+         std::vector<string> a;
+           if (!ProcessList(a,accountUsername.toStdString(),accountPassWd.toStdString()))
+           {
+               qDebug()<<a.size()<<endl;
+//               for(vector<string>::iterator iter = a.begin();iter != a.end();iter++)
+//               {
+//                   std::cout << *iter <<std::endl;
+//               }
+               for (int i=0;i<a.size();i++)
+               {
+                  qDebug()<<QString::fromStdString(a[i])<<endl;
+               }
+           }
+           showMainWindow();
+
     }
 
 }

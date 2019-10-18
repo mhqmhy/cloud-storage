@@ -3,6 +3,7 @@
 ErrorDialog::ErrorDialog()
 {
     this->resize(300,100);
+
 }
 void ErrorDialog::showError(QString error)
 {
@@ -64,6 +65,7 @@ DeleteFileDialog::DeleteFileDialog(QString file)
     vbox->addWidget(w);
     this->setLayout(vbox);
     connect(sureBtn,SIGNAL(clicked()),this,SLOT(deleteFile()));
+    connect(cancelBtn,SIGNAL(clicked()),this,SLOT(closeDialog()));
 }
 
 void DeleteFileDialog::deleteFile()
@@ -72,20 +74,55 @@ void DeleteFileDialog::deleteFile()
     this->close();
 }
 
+void DeleteFileDialog::closeDialog()
+{
+    this->close();
+}
+class MyThread:public QThread
+{
+public:
+    MyThread();
+   QProgressBar *pBar;
+   QLabel *status;
+protected:
+   virtual  void run();
+};
+MyThread::MyThread()
+{
+    //empty;
+}
+
+void MyThread::run()
+{
+
+    status->setText("Waitting");
+    for (int i=0;i<=10;i++)
+    {
+        sleep(1);
+        pBar->setValue(i*10);
+    }
+    status->setText("Finished");
+
+}
 ProgressDialog::ProgressDialog()
 {
     vbox=new QVBoxLayout();
     this->setLayout(vbox);
+    this->resize(400,100);
 }
 
 void ProgressDialog::setProgressBar(QString file)
 {
     QHBoxLayout *hbox=new QHBoxLayout();
     QLabel *filename=new QLabel();
+//    filename->setMaximumSize(100,60);
     filename->setText(file);
     QLabel *status=new QLabel();
     status->setText("Waitting");
+    status->setMaximumSize(100,60);
     QProgressBar *pBar=new QProgressBar();
+    pBar->resize(200,50);
+    pBar->setMaximumSize(1000,80);
     pBar->setOrientation(Qt::Horizontal);  //水平方向
     pBar->setRange(0,100);
     QWidget *w=new QWidget();
@@ -94,14 +131,16 @@ void ProgressDialog::setProgressBar(QString file)
     hbox->addWidget(status);
     w->setLayout(hbox);
     vbox->addWidget(w);
-    showBar(pBar);
+    showBar(pBar,status);
     status->setText("Finished");
 }
 
-void ProgressDialog::showBar(QProgressBar *pBar)
+void ProgressDialog::showBar(QProgressBar *pBar,QLabel *status)
 {
-    for (int i=0;i<=100;i++)
-    {
-        pBar->setValue(i);
-    }
+    MyThread *t=new MyThread();
+    t->pBar=pBar;
+    t->status=status;
+    t->start();
 }
+
+

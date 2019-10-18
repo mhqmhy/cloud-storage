@@ -31,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
     menu->addAction(a3);
     QAction *a4=new QAction(tr("删除"));
     menu->addAction(a4);
-    QAction *a5=new QAction(tr("删除"));
-    menu->addAction(a5);
+//    QAction *a5=new QAction(tr("删除"));
+//    menu->addAction(a5);
     QMenu *menuSetting = ui->menubar->addMenu("设置");
     QToolBar *toolBar_chgDIr = addToolBar(tr("File"));
     QAction *a6=new QAction(tr("更改根目录"));
@@ -62,11 +62,6 @@ void  MainWindow :: chgServerIp()
 {
     IPDialog *dialog =new IPDialog();
     dialog->show();
-
-}
-void MainWindow :: chgLoaclRootDir()
-{
-
 
 }
 
@@ -107,10 +102,10 @@ void MainWindow::updateLocalList()
     }
     else
     {
-        qDebug() << "srcDirPath=" << srcDirPath;
-        this->localTree->model->setRootPath(srcDirPath);
-        this->localTree->setModel(this->localTree->model);
-        this->localTree->setRootIndex(this->localTree->model->index(srcDirPath));
+        qDebug() << "srcDirPath=" << srcDirPath+"/";
+        this->serverTree->currentPath=srcDirPath+"/";
+        this->localTree->currentPath=srcDirPath+"/";
+        this->localTree->loadModel(srcDirPath+"/");
     }
 }
 
