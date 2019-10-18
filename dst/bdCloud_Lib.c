@@ -232,7 +232,7 @@ int recv_download(const int sock_fd,char *buf,const int auth)
 				size=tot;
 				tot=0;
 			}
-			if(fread(buf,sizeof(char),size,fp)<size);
+			if(fread(buf,sizeof(char),size,fp)<size)
 			{
 				perror("Error: fail to read!\n");
 				fclose(fp);
@@ -251,7 +251,7 @@ int recv_download(const int sock_fd,char *buf,const int auth)
 				fclose(fp);
 				return -1;
 			}
-			if(buf[1]!='1')	break;
+			if(buf[0]!='1')	break;
 		}
 		fclose(fp);
 	}
